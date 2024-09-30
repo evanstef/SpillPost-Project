@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}">
-                        <svg class="w-8 h-8 xl:w-12 xl:h-12" viewBox="0 0 55 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="w-8 h-8 sm:w-10 sm:h-10 xl:w-12 xl:h-12" viewBox="0 0 55 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M20.2104 29.7684C15.6891 35.5154 22.9637 36.9521 27.1661 36.9521C-1.0915 49.7957 54.9889 50.0134 54.3368 41.959C53.8151 35.5154 46.5841 35.9362 43.0338 36.9521C42.686 31.9018 39.8457 28.7525 38.4691 27.8092C36.2954 25.4147 25.8619 22.5847 20.2104 29.7684Z" fill="#0CA0F3"/>
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M11.6483 4.09503C13.0849 1.64866 15.791 0 18.8925 0C23.498 0 27.2316 3.63528 27.2316 8.11962C27.2316 8.71189 27.1665 9.28934 27.0428 9.84557C29.162 12.2831 30.0806 15.7093 29.2086 19.0537C27.8152 24.3978 22.3294 27.6922 16.9852 26.2987L7.55022 23.8387C2.15545 22.432 -1.07758 16.9184 0.329039 11.5237C1.64914 6.46071 6.58657 3.30175 11.6483 4.09503ZM24.1258 7.54707C23.4873 7.21646 22.803 6.95133 22.079 6.76255L14.8546 4.87888C15.8207 3.77448 17.2711 3.07227 18.8926 3.07227C21.5993 3.07227 23.8292 5.02908 24.1258 7.54707Z" fill="#FCF6F6"/>
                             <path d="M27.8899 19.3116C26.395 24.7978 26.1343 27.625 21.2652 26.3339C18.7657 25.6711 17.1369 23.0422 19.1119 15.8004C21.2652 9.65579 23.1135 8.33466 25.613 8.99743C31.84 9.65577 28.9872 13.6059 27.8899 19.3116Z" fill="black"/>
@@ -23,20 +23,20 @@
 
             @guest
                 <div class="flex gap-2 xl:gap-3 sm:items-center sm:ms-6">
-                   <a href="{{ route('login') }}" class="bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-base font-bold px-2 py-1 sm:px-3 rounded-lg duration-300 ease-in-out">Login</a>
-                   <a href="{{ route('register') }}" class="bg-gray-700 hover:bg-gray-600 text-white text-xs sm:text-base font-bold py-1 px-2 sm:px-3 rounded-lg duration-300 ease-in-out">Register</a }}"></a>
+                   <a href="{{ route('login') }}" class="bg-blue-500 hover:bg-blue-700 text-white text-xs sm:text-sm lg:text-base font-bold px-2 py-1 sm:px-3 rounded-lg duration-300 ease-in-out">Login</a>
+                   <a href="{{ route('register') }}" class="bg-gray-700 hover:bg-gray-600 text-white text-xs sm:text-sm lg:text-base font-bold py-1 px-2 sm:px-3 rounded-lg duration-300 ease-in-out">Register</a }}"></a>
                 </div>
             @endguest
 
             @auth
                 <!-- Settings Dropdown -->
-                <div class="hidden sm:flex sm:items-center sm:gap-10 sm:ms-6 hover:bg-gray-600 duration-300 ease-in-out px-3 py-1 rounded-lg">
+                <div class="hidden sm:flex sm:items-center sm:gap-10 sm:ms-6 hover:bg-gray-600 duration-300 ease-in-out sm:px-2 xl:px-3 py-1 rounded-lg">
                     {{-- foto dan username dan juga nama --}}
                     <a href="{{ route('profile.show', Auth::user()) }}" class="flex items-center gap-2">
-                        <img class="w-8 h-8 rounded-full object-cover" src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('storage/images/gambar-foto-profil-7.jpg') }}" alt="">
+                        <img class="sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full object-cover" src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('storage/images/gambar-foto-profil-7.jpg') }}" alt="">
                         <div>
-                            <p class="text-sm">{{ Auth::user()->name }}</p>
-                            <p class="text-xs">{{ Auth::user()->username }}</p>
+                            <p class="sm:text-xs md:text-sm">{{ Auth::user()->name }}</p>
+                            <p class="sm:text-[10px] md:text-xs">{{ Auth::user()->username }}</p>
                         </div>
                     </a>
                     <x-dropdown align="right" width="48">

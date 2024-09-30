@@ -67,4 +67,15 @@ class PostController extends Controller
         return redirect()->back();
     }
 
+    // fitur bookmarks
+    public function bookmark(Post $post) {
+        $post->bookmarksByUsers()->attach(Auth::user()->id);
+        return redirect()->route('profile.bookmarks', Auth::user()->username);
+    }
+
+    // fitur unbookmarks
+    public function unbookmark(Post $post) {
+        $post->bookmarksByUsers()->detach(Auth::user()->id);
+        return redirect()->back();
+    }
 }

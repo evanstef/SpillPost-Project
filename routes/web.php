@@ -13,10 +13,17 @@ Route::get('/profile/{user:username}', [ProfileController::class, 'showUserProfi
 // menampilkan detail dari postingan masing masing
 Route::get('/post/{post}', [PostController::class, 'showPost'])->name('post.show');
 
+// pencarian user
+Route::get('api/users/search', [HomeController::class, 'searchUsers'])->name('search.users');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // fitur bookmarks
+    Route::post('/post/{post}/bookmark', [PostController::class, 'bookmark'])->name('post.bookmark');
+    Route::post('/post/{post}/unbookmark', [PostController::class, 'unbookmark'])->name('post.unbookmark');
 
     // update user image
     Route::post('/profile/update-user-image', [ProfileController::class, 'updateUserImage'])->name('profile.update-user-image');
@@ -33,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
     // fitur komen postingan
     Route::post('/post/{post}/comment', [PostController::class, 'createComment'])->name('post.comment');
+
+
 
 });
 

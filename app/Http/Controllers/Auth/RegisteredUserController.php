@@ -30,10 +30,12 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'min:3', 'max:10'],
             'username' => ['required', 'string', 'min:3' ,'max:8', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', 'min:6', 'regex:/[A-Z]/', Rules\Password::defaults()],
+        ],[
+            'password.regex' => 'The password must contain at least one uppercase letter.', // Pesan error khusus
         ]);
 
         $user = User::create([

@@ -68,9 +68,15 @@ class ProfileController extends Controller
 
     // menampilkan halama bookmarks yang berada di profile user
     public function showUserBookmarks(User $user) {
-        return view('profile.show', [
-            'user' => $user
-        ]);
+        // pengecekan bila user iseng mengunjungi halaman bookmark yang tidak login
+        if ($user->id === Auth::user()->id) {
+            return view('profile.show', [
+                'user' => $user
+            ]);
+        } else {
+            return redirect()->route('profile.show', $user->username);
+        }
+
     }
 
     // ganti image profile
@@ -93,7 +99,7 @@ class ProfileController extends Controller
         ]);
 
         // Bisa menambahkan response atau redirect setelah update
-        return redirect()->back()->with('success', 'Image updated successfully.');
+        return redirect()->back()->with('status', 'image-updated');
 
     }
 }

@@ -28,7 +28,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="max-w-7xl mx-auto sm:px-6 lg:px-7 flex items-start justify-between mt-10 gap-5 sm:gap-10 pb-28 sm:pb-10">
+            <main class="max-w-7xl mx-auto sm:px-6 lg:px-7 flex items-start justify-between mt-10 gap-5 lg:gap-6 xl:gap-10 pb-28 sm:pb-10">
                 @include('layouts.sidebar')
                 {{ $slot }}
             </main>

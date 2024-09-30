@@ -67,4 +67,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    // untuk menampilkan postingan yang telah di bookmark oleh user
+    public function bookmarksByUsers():HasMany {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    // relasi ke tabel bookmark
+    public function bookmarks():BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'bookmarks')->withTimestamps();
+    }
 }

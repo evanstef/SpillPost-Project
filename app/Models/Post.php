@@ -34,4 +34,11 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
+
+    // relasi ke tabel bookmark
+    public function bookmarksByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'bookmarks')->withTimestamps();
+    }
+
 }
