@@ -15,6 +15,9 @@
     </div>
 
     <div>
-        <button class="bg-blue-600 hover:bg-blue-700 duration-300 font-bold px-5 lg:px-2 lg:py-1 rounded xl:rounded-lg text-xs xl:text-sm">Follow</button>
+        <form action="{{ route('follows', $user) }}" method="POST">
+            @csrf
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 duration-300 font-bold px-5 lg:px-2 lg:py-1 rounded xl:rounded-lg text-xs xl:text-sm">{{ Auth::check() && Auth::user()->isFollowing($user->id) ? 'Followed' : 'Follow' }}</button>
+        </form>
     </div>
 </div>

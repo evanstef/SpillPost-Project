@@ -10,8 +10,18 @@
             </div>
             <a href="{{ route('profile.show', $post->user) }}" class="text-xs md:text-sm lg:text-base hover:underline hover:text-blue-600 duration-300 ease-in-out">{{ $post->user->username }}</a>
         </div>
-        <div>
+        <div class="flex items-center gap-2">
             <p class="text-xs md:text-sm lg:text-base">{{ $post->created_at->diffForHumans() }}</p>
+            @if (Auth::check() && Auth::user()->id == $post->user->id && request()->routeIs('profile.show'))
+               <form action="{{ route('post.destroy', $post) }}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <x-primary-button type="submit">
+                        Delete Post
+                    </x-primary-button>
+                </form>
+            @endif
+
         </div>
     </div>
 
@@ -32,6 +42,7 @@
     <div class="flex justify-around items-center">
         {{-- like --}}
         <form action="{{ Auth::check() && $post->likedByUsers->contains(Auth::user()->id) ? route('post.unlike', $post) : route('post.like', $post) }}" method="POST">
+            @method(Auth::check() && $post->likedByUsers->contains(Auth::user()->id) ? 'DELETE' : 'POST')
             @csrf
             <div class="flex items-center gap-2">
                 <button type="submit">
@@ -54,6 +65,7 @@
 
         {{-- bookmarks --}}
         <form action="{{ Auth::check() && $post->bookmarksByUsers->contains(Auth::user()->id) ? route('post.unbookmark', $post) : route('post.bookmark', $post) }}" method="POST">
+            @method(Auth::check() && $post->bookmarksByUsers->contains(Auth::user()->id) ? 'DELETE' : 'POST')
             @csrf
             <div class="flex items-center gap-2">
                 <button type="submit">

@@ -25,6 +25,7 @@
                     @foreach ($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
                         <x-comment-template :comment="$comment"/>
                     @endforeach
+
                 @endif
            </div>
         </div>

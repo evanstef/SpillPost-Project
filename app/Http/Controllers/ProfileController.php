@@ -61,17 +61,34 @@ class ProfileController extends Controller
 
     // menampilkan halaman profile user masing masing
     public function showUserProfile(User $user) {
+        // menampilkan followers user masing masing
+        $followers = $user->followers()->latest()->get();
+
+        // menampilkan following dari masing masing user
+        $followings = $user->following()->latest()->get();
+
+        // menampilkan profile user masing masing
         return view('profile.show', [
-            'user' => $user
+            'user' => $user,
+            'followers' => $followers,
+            'followings' => $followings
         ]);
     }
 
     // menampilkan halama bookmarks yang berada di profile user
     public function showUserBookmarks(User $user) {
+        // menampilkan followers user masing masing
+        $followers = $user->followers()->latest()->get();
+
+        // menampilkan following dari masing masing user
+        $followings = $user->following()->latest()->get();
+
         // pengecekan bila user iseng mengunjungi halaman bookmark yang tidak login
         if ($user->id === Auth::user()->id) {
             return view('profile.show', [
-                'user' => $user
+                'user' => $user,
+                'followers' => $followers,
+                'followings' => $followings
             ]);
         } else {
             return redirect()->route('profile.show', $user->username);

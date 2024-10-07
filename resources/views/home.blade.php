@@ -7,15 +7,15 @@
     {{-- Postingan Content --}}
     <x-layout-content class="w-[75%] sm:w-[60%] rounded-lg ml-4 sm:ml-0">
 
-        {{-- Postingan Orang Orang --}}
-        @foreach ($posts as $post)
-        <div class="p-3 sm:p-4 xl:p-6 space-y-4">
-           <x-post-template :post="$post" />
-        </div>
-        @if (!$loop->last)
-           <div class="bg-white h-[1px] w-full"></div>
-        @endif
-        @endforeach
+                {{-- Postingan Orang Orang --}}
+                @foreach ($posts as $post)
+                    <div class="p-3 sm:p-4 xl:p-6 space-y-4">
+                        <x-post-template :post="$post" />
+                    </div>
+                    @if (!$loop->last)
+                        <div class="bg-white h-[1px] w-full"></div>
+                    @endif
+                @endforeach
 
 
     </x-layout-content>
@@ -28,7 +28,7 @@
             {{-- user user yang baru daftar di web ini --}}
             @foreach ($users as $user)
                 @if (Auth::check())
-                    @if ($user->id !== Auth::user()->id)
+                    @if ($user->id !== Auth::user()->id && !Auth::user()->isFollowing($user->id))
                         <x-suggest-follow :user="$user" />
                     @endif
                 @else

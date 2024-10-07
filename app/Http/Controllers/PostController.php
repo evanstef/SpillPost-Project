@@ -41,6 +41,12 @@ class PostController extends Controller
         return redirect()->route('home');
     }
 
+    // fitur hapus postingan user
+    public function destroy(Post $post) {
+        $post->delete();
+        return redirect()->back();
+    }
+
     // fitur like postingan
     public function like(Post $post) {
         $post->likedByUsers()->attach(Auth::user()->id);
@@ -78,4 +84,5 @@ class PostController extends Controller
         $post->bookmarksByUsers()->detach(Auth::user()->id);
         return redirect()->back();
     }
+
 }

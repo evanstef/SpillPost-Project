@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PostFollowingController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -23,7 +27,10 @@ Route::middleware('auth')->group(function () {
 
     // fitur bookmarks
     Route::post('/post/{post}/bookmark', [PostController::class, 'bookmark'])->name('post.bookmark');
-    Route::post('/post/{post}/unbookmark', [PostController::class, 'unbookmark'])->name('post.unbookmark');
+    Route::delete('/post/{post}/unbookmark', [PostController::class, 'unbookmark'])->name('post.unbookmark');
+
+    // fitur hapus postingan user
+    Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
 
     // update user image
     Route::post('/profile/update-user-image', [ProfileController::class, 'updateUserImage'])->name('profile.update-user-image');
@@ -36,12 +43,24 @@ Route::middleware('auth')->group(function () {
 
     // fitur like dan unlike postingan
     Route::post('/post/{post}/like', [PostController::class, 'like'])->name('post.like');
-    Route::post('/post/{post}/unlike', [PostController::class, 'unlike'])->name('post.unlike');
+    Route::delete('/post/{post}/unlike', [PostController::class, 'unlike'])->name('post.unlike');
 
     // fitur komen postingan
     Route::post('/post/{post}/comment', [PostController::class, 'createComment'])->name('post.comment');
 
+    // fitur like dan unlike comment
+    Route::post('/comment/{comment}/like', [CommentController::class, 'likeComment'])->name('post.comment.like');
+    Route::delete('/comment/{comment}/unlike', [CommentController::class, 'unlikeComment'])->name('post.comment.unlike');
 
+    // fitur reply komen postingan
+    Route::post('/comment/{comment}/reply', [CommentController::class, 'replyComment'])->name('post.comment.reply');
+
+    // fitur follow orang
+    Route::post('/follows/{user}', [FollowController::class, 'follows'])->name('follows');
+    Route::delete('/unfollows/{user}', [FollowController::class, 'unfollows'])->name('unfollows');
+
+    // menampilkan semua post yang diikuti user
+    Route::get('/following', [PostFollowingController::class, 'showPostFollowing'])->name('post.following');
 
 });
 

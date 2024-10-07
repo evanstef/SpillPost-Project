@@ -78,4 +78,41 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Post::class, 'bookmarks')->withTimestamps();
     }
+
+    // relasi like komen
+    public function likedComment():BelongsToMany
+    {
+        return $this->belongsToMany(Comment::class, 'comment_like_users')->withTimestamps();
+    }
+
+    // relasi ke tabel reply comment
+    public function replyComments():HasMany
+    {
+        return $this->hasMany(ReplyComment::class);
+    }
+
+
+     // User yang mengikuti orang lain
+     public function following(): BelongsToMany
+     {
+         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+     }
+
+     // User yang diikuti oleh orang lain
+     public function followers(): BelongsToMany
+     {
+         return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+     }
+
+     // Cek apakah user mengikuti user lain
+     public function isFollowing($userId)
+     {
+         return $this->following()->where('following_id', $userId)->exists();
+     }
+
+     // Cek apakah user diikuti oleh user lain
+     public function isFollowedBy($userId)
+     {
+         return $this->followers()->where('follower_id', $userId)->exists();
+     }
 }
