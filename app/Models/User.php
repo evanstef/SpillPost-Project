@@ -59,7 +59,7 @@ class User extends Authenticatable
 
     // relasi likedPostByUser
     public function likedPost():BelongsToMany {
-        return $this->belongsToMany(Post::class, 'post_like_user')->withTimestamps();
+        return $this->belongsToMany(Post::class, 'post_like_user')->withTimestamps()->withPivot('created_at');
     }
 
     // relasi ke tabel comment

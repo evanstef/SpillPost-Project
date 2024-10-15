@@ -60,15 +60,35 @@ class ProfileController extends Controller
     }
 
     // menampilkan halaman profile user masing masing
-    public function showUserProfile(User $user) {
-        // menampilkan followers user masing masing
-        $followers = $user->followers()->latest()->get();
+    public function showUserProfile(Request $request, User $user) {
+        // Mendapatkan ID user yang sedang login
+        $loggedInUser = $request->user();
+
+        $followers = collect();
+        // Menampilkan followers user masing-masing
+        // pengecekan bila user belum login tampilkan followers seperti biasa
+        if (!$loggedInUser) {
+          $followers = $user->followers()->with('posts')->get();
+        } else {
+           $followers = $user->followers()->with('posts')->get()->sortByDesc(function ($follower) use ($loggedInUser) {
+            // Cek apakah user yang login sudah mengikuti follower ini
+            return $loggedInUser->isFollowing($follower->id);
+            });
+        }
 
         // menampilkan following dari masing masing user
-        $followings = $user->following()->latest()->get();
+        $followings = $user->following()->with('posts')->latest()->get();
+
+        // menampilkan semua postingan dari masing masing user
+        $posts = $user->posts()->with('user')->orderBy('created_at', 'desc')->paginate(4);
+
+        // menampilkan semua postingan yang di bookmarks oleh user
+        $bookmarks = $user->bookmarksByUsers()->orderBy('created_at', 'desc')->paginate(4);
 
         // menampilkan profile user masing masing
         return view('profile.show', [
+            'bookmarks' => $bookmarks,
+            'posts' => $posts,
             'user' => $user,
             'followers' => $followers,
             'followings' => $followings
@@ -77,15 +97,30 @@ class ProfileController extends Controller
 
     // menampilkan halama bookmarks yang berada di profile user
     public function showUserBookmarks(User $user) {
-        // menampilkan followers user masing masing
-        $followers = $user->followers()->latest()->get();
+        $loggedInUser = request()->user();
+
+        // filter dari user yang sudah diiikut oleh user login
+        $followers = $user->followers()->with('posts')->get()->sortByDesc(function ($follower) use ($loggedInUser) {
+            // Cek apakah user yang login sudah mengikuti follower ini
+            return $loggedInUser->isFollowing($follower->id);
+        });
+
+
 
         // menampilkan following dari masing masing user
-        $followings = $user->following()->latest()->get();
+        $followings = $user->following()->with('posts')->latest()->get();
+
+        // menampilkan semua postingan dari masing masing user
+        $posts = $user->posts()->with('user')->orderBy('created_at', 'desc')->paginate(4);
+
+        // menampilkan semua postingan yang di bookmarks oleh user
+        $bookmarks = $user->bookmarksByUsers()->orderBy('created_at', 'desc')->paginate(4);
 
         // pengecekan bila user iseng mengunjungi halaman bookmark yang tidak login
         if ($user->id === Auth::user()->id) {
             return view('profile.show', [
+                'bookmarks' => $bookmarks,
+                'posts' => $posts,
                 'user' => $user,
                 'followers' => $followers,
                 'followings' => $followings

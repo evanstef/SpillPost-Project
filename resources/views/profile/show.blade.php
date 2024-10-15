@@ -28,8 +28,8 @@
                              x-transition:leave="transition ease-in-out duration-200"
                              x-transition:leave-start="opacity-100 scale-100"
                              x-transition:leave-end="opacity-0 scale-90"
-                             class="fixed top-0 left-0 w-full h-full flex justify-center items-center" style="display: none;">
-                            <div class="w-[70%] h-[60%] md:w-[60%] lg:w-1/2 xl:w-[40%] dark:bg-gray-700 rounded-lg p-2 sm:p-4 xl:p-6 relative">
+                             class="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50" style="display: none;">
+                            <div class="w-[70%] h-[55%] sm:h-[50%] md:w-[60%] md:h-[60%] lg:w-1/2 xl:w-[40%] dark:bg-gray-700 rounded-lg p-2 sm:p-4 xl:p-6 relative">
                                     {{-- tombol untuk menutup menu menampilkan semua followers --}}
                                     <button @click="showFollowers = false" id="hide-followers" class="absolute top-2 right-2 lg:right-3">
                                         <svg class="w-5 h-5 xl:w-6 xl:h-6 bg-white rounded-full p-1" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,13 +42,13 @@
                                     <div class="w-full h-[1px] bg-gray-100 my-2"></div>
 
                                     {{-- untuk menampilkan nama nama followers --}}
-                                    <div class="space-y-2">
+                                    <div class="space-y-[6px] h-[90%] {{ $followers->count() >= 8 ? 'overflow-y-scroll' : '' }} scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin" x-data="{ showFollowers: false }">
                                         {{-- pengecekan bila followers belum ada --}}
                                         @if($followers->count() === 0)
-                                            <p class="text-xs sm:text-sm lg:text-base xl:text-lg">{{ $user->username === Auth::user()->username ? 'You don\'t have any followers' : $user->username . ' doesn\'t have any followers' }}</p>
+                                            <p class="text-xs sm:text-sm lg:text-base xl:text-lg">{{ Auth::check() && $user->username === Auth::user()->username ? 'You don\'t have any followers' : $user->username . ' doesn\'t have any followers' }}</p>
                                         @else
                                             @foreach ($followers as $follower)
-                                                <div class="flex justify-between items-center">
+                                                <div class="flex justify-between items-center {{ $followers->count() >= 8 ? 'mr-2 lg:mr-4' : '' }}">
                                                     <div class="flex gap-2 xl:gap-4 items-center">
                                                         <img class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover" src="{{ $follower->image ? asset('storage/' . $follower->image) : asset('storage/images/gambar-foto-profil-7.jpg') }}" alt="">
                                                         <a href="{{ route('profile.show', $follower->username) }}" class="hover:underline hover:text-blue-600 text-xs sm:text-sm md:text-base">{{ $follower->username }}</a>
@@ -56,7 +56,12 @@
 
                                                     {{-- pengecekan bila user yang saat ini login belum follow user yang berada di daftar followers user saat ini --}}
                                                     @if (Auth::check() && Auth::user()->isFollowing($follower->id))
-                                                        <p class="bg-gray-600 text-white px-2 md:px-3 py-1 rounded sm:rounded-lg text-sm md:text-lg xl:text-xl cursor-default">Followed</p>
+                                                        <form action="{{ route('unfollows', $follower) }}" method="POST">
+                                                            @method('DELETE')
+                                                            @csrf
+                                                            <button type="submit" class="bg-gray-500 hover:bg-gray-700 duration-300 ease-in-out text-white px-2 md:px-3 py-1 rounded sm:rounded-lg text-sm md:text-lg xl:text-xl">Unfollow</button>
+                                                        </form>
+
                                                     @else
                                                         @if (Auth::check() && $follower->id !== Auth::user()->id)
                                                         <form action="{{ route('follows', $follower) }}" method="POST">
@@ -78,6 +83,7 @@
                                             @endforeach
                                         @endif
                                     </div>
+
                             </div>
                         </div>
 
@@ -96,8 +102,8 @@
                         x-transition:leave="transition ease-in-out duration-200"
                         x-transition:leave-start="opacity-100 scale-100"
                         x-transition:leave-end="opacity-0 scale-90"
-                        class="fixed top-0 left-0 w-full h-full flex justify-center items-center" style="display: none;">
-                                <div class="w-[70%] h-[60%] md:w-[60%] lg:w-1/2 xl:w-[40%] dark:bg-gray-700 rounded-lg p-2 sm:p-4 lg:p-6 relative">
+                        class="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50" style="display: none;">
+                                <div class="w-[70%] h-[55%] sm:h-[50%] md:w-[60%] md:h-[60%] lg:w-1/2 xl:w-[40%] dark:bg-gray-700 rounded-lg p-2 sm:p-4 lg:p-6 relative">
                                         {{-- tombol untuk menutup menu menampilkan semua followers --}}
                                         <button @click="showFollowing = false" id="hide-followers" class="absolute top-2 right-2 xl:right-3">
                                             <svg class="w-5 h-5 xl:w-6 xl:h-6 bg-white rounded-full p-1" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,13 +116,13 @@
                                         <div class="w-full h-[1px] bg-gray-100 my-2"></div>
 
                                         {{-- untuk menampilkan nama nama followers --}}
-                                        <div class="space-y-2">
+                                        <div class="space-y-2 h-[90%] {{ $followings->count() >= 8 ? 'overflow-y-scroll' : '' }} scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thin">
                                             {{-- pengecekan bila followers belum ada --}}
                                             @if($followings->count() === 0)
                                                 <p class="text-xs sm:text-sm lg:text-base xl:text-lg">{{Auth::check() && $user->username === Auth::user()->username ? 'You don\'t have any following' : $user->username . ' doesn\'t have any following' }}</p>
                                             @else
                                                 @foreach ($followings as $following)
-                                                    <div class="flex justify-between items-center">
+                                                    <div class="flex justify-between items-center {{ $followings->count() >= 8 ? 'mr-2 lg:mr-4' : '' }}">
                                                         <div class="flex gap-2 xl:gap-4 items-center">
                                                             <img class="w-6 h-6 md::w-8 md::h-8 rounded-full object-cover" src="{{ $following->image ? asset('storage/' . $following->image) : asset('storage/images/gambar-foto-profil-7.jpg') }}" alt="">
                                                             <a href="{{ route('profile.show', $following->username) }}" class="text-xs sm:text-sm md:text-base hover:underline hover:text-blue-600">{{ $following->username }}</a>
@@ -124,7 +130,11 @@
 
                                                         {{-- pengecekan bila user yang saat ini login belum follow user yang berada di daftar followers user saat ini --}}
                                                         @if (Auth::check() && Auth::user()->isFollowing($following->id))
-                                                            <p class="bg-gray-600 text-white px-2 md:px-3 py-1 rounded sm:rounded-lg text-sm md:text-lg xl:text-xl cursor-default">Followed</p>
+                                                            <form action="{{ route('unfollows', $following) }}" method="POST">
+                                                                @method('DELETE')
+                                                                @csrf
+                                                                <button type="submit" class="bg-gray-500 hover:bg-gray-600 duration-300 ease-in-out text-white px-2 md:px-3 py-1 rounded sm:rounded-lg text-sm md:text-lg xl:text-xl">Unfollow</button>
+                                                            </form>
                                                         @else
                                                             @if (Auth::check() && $following->id !== Auth::user()->id)
                                                             <form action="{{ route('follows', $following) }}" method="POST">
@@ -139,6 +149,7 @@
                                                                 px-2 md:px-3 py-1 rounded sm:rounded-lg text-sm md:text-lg xl:text-xl">Follow</button>
                                                             </form>
                                                             @endif
+
 
                                                         @endif
                                                     </div>
@@ -210,29 +221,34 @@
                     @if ($user->posts->count() === 0)
                         <p class="text-center text-lg">No SpillPost yet</p>
                     @else
-                            @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
-                                <x-post-template :post="$post" />
+                            @foreach ($posts as $post)
+                                <x-post-template :post="$post" :userLikesPost="$post->likedByUsers()->orderBy('post_like_user.created_at', 'desc')->get()" />
                                 @if (!$loop->last)
                                 <div class="bg-white h-[1px] w-full"></div>
                                 @endif
                             @endforeach
+                            <div>{{ $posts->links() }}</div>
                     @endif
 
                 @elseif (request()->is('profile/' . Auth::user()->username . '/bookmarks'))
                     @if ($user->bookmarksByUsers->count() === 0)
                         <p class="text-center text-lg">No Bookmarks yet</p>
                     @else
-                        @foreach ($user->bookmarksByUsers()->orderBy('created_at', 'desc')->get() as $bookmark)
-                            <x-bookmark-template :bookmark="$bookmark" />
+                        @foreach ($bookmarks as $bookmark)
+                            <x-bookmark-template :bookmark="$bookmark" :userLikesPost="$bookmark->post->likedByUsers()->orderBy('post_like_user.created_at', 'desc')->get()" />
                             @if (!$loop->last)
                                 <div class="bg-white h-[1px] w-full"></div>
                             @endif
                         @endforeach
+                        <div>{{ $bookmarks->links() }}</div>
                     @endif
                 @endif
+
+
             </div>
         </div>
     </x-layout-content>
 </x-app-layout>
+
 
 

@@ -1,6 +1,9 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 
+const scrollbar = require('tailwind-scrollbar'); // Pastikan plugin scrollbar diimpor dengan benar
+const daisyui = require('daisyui');
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
@@ -17,5 +20,9 @@ export default {
         },
     },
 
-    plugins: [forms],
+    plugins: [
+        forms,
+        daisyui,
+        scrollbar,
+    ],
 };

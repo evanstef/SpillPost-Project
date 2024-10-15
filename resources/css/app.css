@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+    .dot {
+        transition: background-color 0.3s ease;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px; /* Lebar scrollbar */
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #A0AEC0; /* Warna thumb scrollbar */
+        border-radius: 10px; /* Membuat thumb berbentuk bulat */
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background-color: #2D3748; /* Warna track scrollbar (latar belakang) */
+        border-radius: 10px; /* Membuat track berbentuk bulat */
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #718096; /* Warna thumb scrollbar saat hover */
+      }
+}

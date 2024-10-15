@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function showPost(Post $post) {
-        $users = User::query()->latest()->get()->take(5);
+        // bikin menjadi eager loading
+        $users = User::with('posts')->latest()->get()->take(5);
         return view('post.show', [
             'post' => $post,
             'users' => $users
@@ -19,24 +20,35 @@ class PostController extends Controller
     // untuk user bisa posting
     public function createPost(Request $request) {
         $validated = $request->validate([
-            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
+            'image.*' => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
             'content' => ['required', 'string'],
         ]);
 
+        $imagePath = [];
+
         // Pengecekan jika user mengunggah file gambar
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $imagePath = $file->store('images/posts', 'public');
+            foreach ($request->file('image') as $image) {
+                $imagePath[] = $image->store('images/posts', 'public');
+            }
         } else {
             $imagePath = null; // Jika tidak ada gambar, set null
         }
 
 
         // pengecekan postinga user menambah atau tidak menambahkan gambar
-        $request->user()->posts()->create([
+        $post = $request->user()->posts()->create([
             'body' => $validated['content'],
-            'image' => $imagePath
         ]);
+
+        // pengecekan bila user menambah atau tidak menambahkan gambar
+        if (!empty($imagePath)) {
+            foreach ($imagePath as $path) {
+                $post->images()->create([
+                    'image_path' => $path,
+                ]);
+            }
+        }
 
         return redirect()->route('home');
     }

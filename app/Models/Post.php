@@ -23,6 +23,12 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    // relasi ke tabel images agar user bisa menambahkan lebih dari image
+    public function images():HasMany
+    {
+        return $this->hasMany(PostImage::class);
+    }
+
     // relasi untuk likePost
     public function likedByUsers():BelongsToMany {
         return $this->belongsToMany(User::class, 'post_like_user')->withTimestamps();

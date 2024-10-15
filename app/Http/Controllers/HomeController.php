@@ -8,13 +8,39 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // data user user di acak namun ambil 5 user saja di web ini
-        $users = User::inRandomOrder()->limit(5)->get();
+
+        // fitur sorting list postingan default nya latest
+        $sortValue = $request->get('sort', 'newest');
 
         // untuk menampikan semua postingan
-        $posts = Post::query()->latest()->get();
+        $query = Post::query();
+
+        // data user user di acak namun ambil 5 user saja di web ini
+        $users = User::with('posts')->inRandomOrder()->limit(5)->get();
+
+        // mengambil sortingan sesuai inputan user
+        switch ($sortValue) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'mostLiked':
+                $query->withCount('likedByUsers')->orderBy('liked_by_users_count', 'desc');
+                break;
+            case 'mostComment':
+                $query->withCount('comments')->orderBy('comments_count', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // menampilkan semua postingan yang sudah di sort sesuai dengan keinginan user
+        $posts = $query->paginate(5);
+
+
         return view('home',
             [
                 'users' => $users,
@@ -26,7 +52,7 @@ class HomeController extends Controller
     public function searchUsers(Request $request) {
         $searchUser = $request->input('search');
 
-        if (strlen($searchUser) < 3) {
+        if (strlen($searchUser) < 1) {
             return response()->json([]);
         }
 
