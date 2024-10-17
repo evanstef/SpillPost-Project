@@ -18,7 +18,7 @@ Route::get('/profile/{user:username}', [ProfileController::class, 'showUserProfi
 Route::get('/post/{post}', [PostController::class, 'showPost'])->name('post.show');
 
 // pencarian user
-Route::get('api/users/search', [HomeController::class, 'searchUsers'])->name('search.users');
+Route::get('/api/users/search', [HomeController::class, 'searchUsers'])->name('search.users');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
