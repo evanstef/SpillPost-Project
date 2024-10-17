@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+.vercel
 .env
 .env.backup
 .env.production

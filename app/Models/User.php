@@ -57,6 +57,12 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    // mengambil postingan yang diikuti user
+    public function postsFollowing():HasMany
+    {
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
     // relasi likedPostByUser
     public function likedPost():BelongsToMany {
         return $this->belongsToMany(Post::class, 'post_like_user')->withTimestamps()->withPivot('created_at');
