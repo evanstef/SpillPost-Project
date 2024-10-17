@@ -4,6 +4,11 @@
     "functions": {
         "api/index.php": { "runtime": "vercel-php@0.6.0" }
     },
+    "builds" : {
+        "env" : {
+            "NODE_VERSION" : "18.x"
+        }
+    },
     "routes": [
         { "src": "/build/(.*)", "dest": "/public/build/" },
         { "src": "/(.*)", "dest": "/api/index.php" }
