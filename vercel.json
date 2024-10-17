@@ -4,17 +4,12 @@
     "functions": {
         "api/index.php": { "runtime": "vercel-php@0.6.2" }
     },
-    "build": {
-        "env": {
-            "NODE_VERSION": "18.x"
-        }
-    },
     "routes": [
         { "src": "/build/(.*)", "dest": "/public/build/" },
         { "src": "/(.*)", "dest": "/api/index.php" }
     ],
     "public": true,
-    "buildCommand": "apt-get update && apt-get install -y openssl && vite build",
+    "buildCommand": "vite build",
     "outputDirectory": "public",
     "env": {
         "APP_ENV": "production",
