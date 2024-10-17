@@ -14,7 +14,7 @@
         { "src": "/(.*)", "dest": "/api/index.php" }
     ],
     "public": true,
-    "buildCommand": "vite build",
+    "buildCommand": "apt-get update && apt-get install -y openssl && vite build",
     "outputDirectory": "public",
     "env": {
         "APP_ENV": "production",
