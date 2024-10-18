@@ -10,7 +10,7 @@ async function searchUser() {
     try {
 
         // melakukan fetch ke backend
-        const response = await fetch(`/api/users/search?search=${searchInput}`, {
+        const response = await fetch(`/users/search?search=${searchInput}`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
